@@ -1,8 +1,6 @@
 - [介绍](intro.md)
 - [系统组成](systemoverview.md)
-- [产品特点](features.md)
-- [硬件选项](hardware_options.md)
-- [展示区](gallery.md)
+- [硬件选项](hardware_options.md) 
 - [快速启动](quickstart.md)
 - [应用程序接口(API)](api.md)
 - 使用教程
