@@ -1,10 +1,10 @@
 # 使用UWB模块搭建室内定位系统
 
-注意：本教程仅适用于Kerloud UWB 套件
+注意：本教程仅适用于XDKJY UWB 套件
 
 ## 1. 简介
 
-超宽带（UWB, Ultra-Wideband）定位是一种基于无线电的定位方法，通过测量锚点（固定信标）与标签（安装在无人机上的设备）之间的飞行时间（ToF, Time-of-Flight）来确定距离。通过精确测量来自多个锚点的距离，系统可通过三边测量法实时计算无人机的三维位置。我们为用户提供 Kerloud UAV UWB 定位套件，作为基于视觉的方法或动作捕捉系统的替代方案。
+超宽带（UWB, Ultra-Wideband）定位是一种基于无线电的定位方法，通过测量锚点（固定信标）与标签（安装在无人机上的设备）之间的飞行时间（ToF, Time-of-Flight）来确定距离。通过精确测量来自多个锚点的距离，系统可通过三边测量法实时计算无人机的三维位置。我们为用户提供 XDKJY UAV UWB 定位套件，作为基于视觉的方法或动作捕捉系统的替代方案。
 
 ## 2. 硬件搭建
 
@@ -17,7 +17,7 @@
 UWB 定位相关软件包托管于我们的官方镜像站点：https://mirror.cloudkernel.cn
 目前软件支持 amd64 与 arm64 架构。建议用户按照以下步骤进行安装与更新。
 
-下载 Kerloud UAV UWB 套件的发布文件：
+下载 XDKJY UAV UWB 套件的发布文件：
 
 ```bash
 cd ~ && git clone https://gitee.com/cloudkernel-tech/dasa_release_files

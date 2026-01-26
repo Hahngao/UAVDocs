@@ -1,6 +1,6 @@
 # 实时视觉识别
 
-注意：本文只适用于装载Jetson Nano的Kerloud无人机产品
+注意：本文只适用于装载Jetson Nano的XDKJY无人机产品
 
 开启视觉识别介绍所使用的官方示例项目是jetson-inference资源库，链接为：
 https://github.com/dusty-nv/jetson-inference，这是一个适用于英伟达Jetson Nano的hello-world示例。

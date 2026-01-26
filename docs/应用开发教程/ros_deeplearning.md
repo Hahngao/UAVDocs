@@ -1,6 +1,6 @@
 # Deep Learning in ROS
 
-Note: This tutorial is applicable for Kerloud UAV products equipped with Jetson Nano only.
+Note: This tutorial is applicable for XDKJY UAV products equipped with Jetson Nano only.
 To develop robotics applications, we can follow the official repository in https://github.com/dusty-nv/ros_deep_learning
 to integrate Nvidia deep learning capabilities with ROS. The code include several ros nodes to deploy networks based on installed jetson inference
 libraries.

@@ -1,16 +1,16 @@
 # 应用程序接口 (API)
 
-我们为Kerloud无人机系列的开发提供开源API，可选的API接口将会支持C++、python及其他语言，详情会在本部分持续更新。请注意，我们假设用户熟悉 ROS 的基本概念，不了解的用户建议阅读 http://wiki.ros.org/ROS/Tutorials 中的官方教程。
+我们为XDKJY无人机系列的开发提供开源API，可选的API接口将会支持C++、python及其他语言，详情会在本部分持续更新。请注意，我们假设用户熟悉 ROS 的基本概念，不了解的用户建议阅读 http://wiki.ros.org/ROS/Tutorials 中的官方教程。
 
 ## 1. ROS API (C++)
 
 ROS（Robot Operating System）中的 API 是基于PX4 社区的官方 MAVROS包 实现的。
 我们维护的资源库为：
 
-- mavros（dev_kerlouduav 分支）: https://github.com/cloudkernel-tech/mavros
-- mavlink（dev_kerlouduav 分支）: https ://github.com/cloudkernel-tech/mavlink-gdp-release
+- mavros（dev_XDKJYuav 分支）: https://github.com/cloudkernel-tech/mavros
+- mavlink（dev_XDKJYuav 分支）: https ://github.com/cloudkernel-tech/mavlink-gdp-release
 
-请注意，offboard控制演示代码仅随Kerloud机器提供，因此不是开源的。更多编程细节将在教程部分 Mavros在线控制 (C++) 中阐述。本文介绍我们 Kerloud 无人机案例中常用的主题和服务。
+请注意，offboard控制演示代码仅随XDKJY机器提供，因此不是开源的。更多编程细节将在教程部分 Mavros在线控制 (C++) 中阐述。本文介绍我们 XDKJY 无人机案例中常用的主题和服务。
 
 ### 1.1 话题
 
@@ -81,10 +81,10 @@ arming_client.call(arm_cmd)
 与 C++ 版的 ROS API 类似，ROS python API 也是基于我们维护的 mavros 和 mavlink 包来。唯一的区别是上面提到的所有主题和服务都应基于python 使用。
 我们维护的资源库为：
 
-- mavros（dev_kerlouduav 分支）: https://github.com/cloudkernel-tech/mavros
-- mavlink（dev_kerlouduav 分支）: https://github.com/cloudkernel-tech/mavlink-gdp-release
+- mavros（dev_XDKJYuav 分支）: https://github.com/cloudkernel-tech/mavros
+- mavlink（dev_XDKJYuav 分支）: https://github.com/cloudkernel-tech/mavlink-gdp-release
 
-offboard控制例程代码也随Kerloud机器一起提供，在教程 Mavros在线控制 (Python) 部分中有详细阐述。为简洁起见，低级别消息通信在 Px4Controller 类中处理，而用于用户编程的友好 API 则包装在 Commander 类中，部分列举如下：
+offboard控制例程代码也随XDKJY机器一起提供，在教程 Mavros在线控制 (Python) 部分中有详细阐述。为简洁起见，低级别消息通信在 Px4Controller 类中处理，而用于用户编程的友好 API 则包装在 Commander 类中，部分列举如下：
 
 - move(x,y,z, BODY_FLU=False)：请求机体移动到 FLU 坐标系或 ENU坐标系下定义的所需位置
 - turn(yaw_degree)：请求飞行器在飞行过程中转向所需的偏航角

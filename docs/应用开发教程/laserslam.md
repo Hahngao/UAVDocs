@@ -1,6 +1,6 @@
 # 使用激光SLAM实现室内定位
 
-注意：本教程适用于配备激光扫描仪的Kerloud无人机
+注意：本教程适用于配备激光扫描仪的XDKJY无人机
 本教程介绍了我们如何实现室内定位的激光SLAM方法。
 
 教程代码仅供研究项目使用，不能直接部署在产品上。
@@ -9,7 +9,7 @@
 
 本教程所需的硬件设置是：
 
-- Kerloud 无人机，需配置Nvidia Jetson Nano等机载电脑
+- XDKJY 无人机，需配置Nvidia Jetson Nano等机载电脑
 - 室内激光雷达套件，包括 LD19 激光雷达 和 北醒 TF-Luna 距离传感器
 
 经过充分测试的环境是带有 Ubuntu 18.04 的 ROS Melodic，所有必要的组件都在工厂中正确设置。
@@ -31,7 +31,7 @@
 ```bash
 sudo vim /etc/hosts
 
-# set a host name for kerloud uav
+# set a host name for XDKJY uav
 # e.g. 192.168.0.104 master_ip
 <IP address> master_ip
 ```
@@ -108,7 +108,7 @@ source devel/setup.bash \
 
 ### 3.4 室内实验
 
-请确保 Kerloud 自动驾驶仪已正确配置为基于 SLAM 的定位，详细信息请参阅用户手册。
+请确保 XDKJY 自动驾驶仪已正确配置为基于 SLAM 的定位，详细信息请参阅用户手册。
 
 要启动激光 SLAM 流程，建议严格遵循以下步骤：
 

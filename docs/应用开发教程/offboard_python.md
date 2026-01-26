@@ -1,6 +1,6 @@
 # Mavros在线控制 (Python)
 
-注意：本文适用于所有Kerloud无人机产品
+注意：本文适用于所有XDKJY无人机产品
 
 python 语言使用mavros 进行offboard控制的方式与C++ 案例相同。该方法是利用 mavros 包中的标准主题或服务来检索车辆信息或发送命令。 工作区位于 ~/src/uav_workspace/pythonuav_ros，所有必要的软件依赖在出厂阶段已配置。
 

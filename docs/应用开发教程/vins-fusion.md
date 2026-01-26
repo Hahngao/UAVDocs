@@ -1,7 +1,7 @@
 # 基于立体视觉和GPU加速的视觉里程系统(VINS)
 
-注意：本文只适用于 Kerloud SLAM Indoor无人机产品
-Kerloud SLAM Indoor配备有Nvidia TX2模块和Intel Realsense D435i立体摄像头。凭借更强大的GPU内核，硬件配置能够通过纯视觉实现完全自主的室内定位。VINS系统为视觉辅助自主控制和其他应用（如 SLAM、AR（增强现实））开辟了广泛的机会。该产品适合需要深入研究计算机视觉和机器人自主控制的高端用户。
+注意：本文只适用于 XDKJY SLAM Indoor无人机产品
+XDKJY SLAM Indoor配备有Nvidia TX2模块和Intel Realsense D435i立体摄像头。凭借更强大的GPU内核，硬件配置能够通过纯视觉实现完全自主的室内定位。VINS系统为视觉辅助自主控制和其他应用（如 SLAM、AR（增强现实））开辟了广泛的机会。该产品适合需要深入研究计算机视觉和机器人自主控制的高端用户。
 
 ## 背景
 
@@ -21,7 +21,7 @@ VINS系统是基于香港科技大学空中机器人组 (https://uav.hkust.edu.h
 
 位于路径~/src/catkin_ws_VINS-Fusion-gpu中的VINS系统工作区包含如下软件包：
 
-- VINS-Fusion-gpu：具备GPU加速的VINS算法包，专为Kerloud无人机定制
+- VINS-Fusion-gpu：具备GPU加速的VINS算法包，专为XDKJY无人机定制
 - vison_opencv：用于连接ROS与OpenCV的软件包
 - pose_converter：用于连接里程计系统与飞控系统的软件包
 
@@ -39,17 +39,17 @@ cd ~/src/catkinws_realsense \
 # terminal 3: launch realsense driver node
 cd ~/src/catkinws_realsense \
 && source devel/setup.bash \
-&& roslaunch realsense2_camera rs_d435i_kerloud_stereo_slam.launch
+&& roslaunch realsense2_camera rs_d435i_XDKJY_stereo_slam.launch
 
 # terminal 4: launch VINS node
 cd ~/src/catkin_ws_VINS-Fusion-gpu \
 && source devel/setup.bash \
-&& rosrun vins vins_node /home/ubuntu/src/catkin_ws_VINS-Fusion-gpu/src/VINS-Fusion-gpu/config/kerloud_tx2_d435i/realsense_stereo_imu_config.yaml
+&& rosrun vins vins_node /home/ubuntu/src/catkin_ws_VINS-Fusion-gpu/src/VINS-Fusion-gpu/config/XDKJY_tx2_d435i/realsense_stereo_imu_config.yaml
 
 # (Optional) terminal 5: launch vins-loop-fusion node
 cd ~/src/catkin_ws_VINS-Fusion-gpu \
 && source devel/setup.bash \
-&& rosrun loop_fusion loop_fusion_node /home/ubuntu/src/catkin_ws_VINS-Fusion-gpu/src/VINS-Fusion-gpu/config/kerloud_tx2_d435i/realsense_stereo_imu_config.yaml
+&& rosrun loop_fusion loop_fusion_node /home/ubuntu/src/catkin_ws_VINS-Fusion-gpu/src/VINS-Fusion-gpu/config/XDKJY_tx2_d435i/realsense_stereo_imu_config.yaml
 
 # terminal 6: launch pose_converter node
 cd ~/src/catkin_ws_VINS-Fusion-gpu \

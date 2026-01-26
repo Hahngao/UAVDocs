@@ -1,8 +1,8 @@
 # 供电和编程界面
 
-注意：本文只适用于装载Jetson Nano的Kerloud无人机产品
+注意：本文只适用于装载Jetson Nano的XDKJY无人机产品
 
-英伟达Jetson Nano支持两种供电方式：Micro USB供电和DC Jack供电。Kerloud UAV系列组件默认选用DC Jack，如下图所示。
+英伟达Jetson Nano支持两种供电方式：Micro USB供电和DC Jack供电。XDKJY UAV系列组件默认选用DC Jack，如下图所示。
 可通过将Jetson Nano载板上的J48跳选位断开，切换为Micro USB供电方式。
 我们建议用户使用DC Jack进行供电，因为Micro USB最大供电电流为2A，在高负载计算场景下会存在供电不足。
 

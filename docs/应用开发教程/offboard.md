@@ -1,6 +1,6 @@
 # Mavros在线控制 (C++)
 
-注意：本文适用于所有Kerloud无人机产品
+注意：本文适用于所有XDKJY无人机产品
 
 mavros ROS程序包可视为运行ROS的计算机、启用MAVLink的无人机和启用MAVLink的地面站三者间的网关，其安装流程可参考：
 https://dev.px4.io/v1.9.0/en/ros/mavros_installation.html 或
@@ -13,7 +13,7 @@ https://dev.px4.io/master/en/ros/offboard_control.html,
 https://dev.px4.io/master/en/companion_computer/pixhawk_companion.html。
 在我们的环境下，用户可以按如下内容对Pixhawk板载参数进行设置：
 
-针对默认安装的 Kerloud mini 自驾仪:
+针对默认安装的 XDKJY mini 自驾仪:
 
 ```
 MAV_0_CONFIG = TELEM 1

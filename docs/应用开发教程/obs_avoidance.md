@@ -1,6 +1,6 @@
 # Obstacle Avoidance in Outdoor Environment
 
-The obstacle avoidance software is prepared under the workspace ~/src/uav_space/catkinws_avoidance. We have tested the code thoroughly during factory to ensure the complete suite works properly. The supported OS is Ubuntu 18.04 with ROS melodic. The avoidance package is delivered in the dev_kerlouduav branch, so be sure to switch to that branch to avoid potential software bugs.
+The obstacle avoidance software is prepared under the workspace ~/src/uav_space/catkinws_avoidance. We have tested the code thoroughly during factory to ensure the complete suite works properly. The supported OS is Ubuntu 18.04 with ROS melodic. The avoidance package is delivered in the dev_XDKJYuav branch, so be sure to switch to that branch to avoid potential software bugs.
 
 ```
 # open a terminal (terminal 1)

@@ -1,6 +1,6 @@
 # Flight Data Analysis
 
-Note: This tutorial is applicable for all Kerloud UAV products.
+Note: This tutorial is applicable for all XDKJY UAV products.
 
 ## What’s Behind Flight Crashes
 
@@ -11,7 +11,7 @@ the flight data log. Interested users can also refer to the official PX4 documen
 
 ## Flight Data Log
 
-The flight data log (ulg format) is stored in the SD card within the Kerloud autopilot. It can be accessed either by directly using a SD card reader or from the Qgroundcontrol Station
+The flight data log (ulg format) is stored in the SD card within the XDKJY autopilot. It can be accessed either by directly using a SD card reader or from the Qgroundcontrol Station
 with a usb connection. The data log is automatically started from each arming by default although the setting can be changed, and each log is named by the flight time or
 a session ID.
 With a SD card reader, the data log can be found under the directory log, shown below:
