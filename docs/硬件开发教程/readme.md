@@ -4,4 +4,4 @@ XDKJY UAV系列作为西安电子科技大学面向无人机系统集成爱好�
 
 ## 导航
 
-- [APM固件烧录](APM\DIY_APM_Guide.md)
+- [APM固件烧录](硬件开发教程/APM/DIY_APM_Guide.md)
