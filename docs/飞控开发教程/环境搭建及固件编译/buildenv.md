@@ -15,10 +15,15 @@
      ```cmd
      wsl.exe --install Ubuntu-24.04
      ```
+   - 安装之后，还需要首次打开，完成用户名和密码的配置
+     
+       ```cmd
+       wsl.exe -d Ubuntu-24.04
+       ```
 
 2. **Windows 下安装 [VS Code](https://code.visualstudio.com/) 或推荐使用TRAE**
 
-3. **在Windows开始菜单找到Ubuntu，直接打开**
+3. **注意以上过程，wsl安装出错，可能是网络问题，可能是需要注销重新安装**
 
 4. **WSL2 Ubuntu 下安装 git gitk git-gui**
 
@@ -30,20 +35,21 @@
      sudo apt install git gitk git-gui
      ```
 
-5. **克隆项目源码**
+3. **克隆项目源码**
 
-   - 在 Ubuntu 终端中输入以下命令克隆
+   - 在 Ubuntu 终端中输入以下命令克隆，建议使用SSH，配置方法：[github配置SSH-Key保姆级教程 - 知乎](https://zhuanlan.zhihu.com/p/688103044)
 
      ```bash
-     git clone https://github.com/ArduPilot/ardupilot.git
+     git clone git@github.com:ArduPilot/ardupilot.git
      ```
 
-6. **配置工作环境**
+4. **配置工作环境**
+   
    - 在 VS Code 中点击`远程`按键，选择`WSL`，选择安装的 Ubuntu-24.04，等待目录切换完成
    - 在 VS Code 中 `File -> Open Folder` 打开 `ardupilot` 文件夹
    - 切换到 master 分支
-
-7. **安装必要依赖**
+   
+5. **安装必要依赖**
 
    - 打开终端 (`Ctrl + ~`)
 
@@ -57,7 +63,7 @@
        . ~/.profile
        ```
 
-   -   等待终端输出
+   -   耐心等待终端输出，需要挂梯子
 
        ```bash
        ---------- ./Tools/environment_install/install-prereqs-ubuntu.sh end ----------

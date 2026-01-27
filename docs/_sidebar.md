@@ -4,6 +4,7 @@
 - [**快速启动**](quickstart.md)
 - [**应用程序接口(API)**](api.md)
 - [**飞控开发教程**](飞控开发教程/readme.md)
+  - [环境搭建及固件编译](飞控开发教程/环境搭建及固件编译/buildenv.md)
 - [**地面站开发教程**](地面站开发教程/readme.md)
 - [**硬件开发教程**](硬件开发教程/readme.md)
   - [AM32 CAN ESC自定义固件编译与烧录](硬件开发教程/AM32/DIY_AM32_ESC_Guide.md)
