@@ -48,7 +48,8 @@
    - 在 Ubuntu 终端中输入以下命令克隆，建议使用SSH，配置方法：[github配置SSH-Key保姆级教程 - 知乎](https://zhuanlan.zhihu.com/p/688103044)
 
      ```bash
-     git clone git@github.com:ArduPilot/ardupilot.git
+     git clone https://github.com/ArduPilot/ardupilot.git
+     # git clone git@github.com:ArduPilot/ardupilot.git
      ```
 
 4. **配置工作环境**
