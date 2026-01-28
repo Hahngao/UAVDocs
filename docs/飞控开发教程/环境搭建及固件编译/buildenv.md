@@ -30,9 +30,17 @@
    - 在 Ubuntu 终端中输入以下命令安装
 
      ```bash
-     sudo apt update
-     sudo apt upgrade
-     sudo apt install git gitk git-gui
+      # 更新可用软件包列表，从软件源获取最新的版本信息
+      sudo apt update
+      
+      # 升级所有已安装的软件包到最新版本
+      sudo apt upgrade
+      
+      # 安装Git版本控制系统及相关图形化工具：
+      # git - 核心版本控制工具
+      # gitk - Git仓库可视化浏览器（基于Tk）
+      # git-gui - Git图形化界面工具
+      sudo apt install git gitk git-gui
      ```
 
 3. **克隆项目源码**
