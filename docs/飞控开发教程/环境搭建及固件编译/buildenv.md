@@ -1,6 +1,6 @@
 # APM、PX4环境搭建及固件编译
 
-> *Hahngao 编辑于 2026/1/26
+> *Hahngao 首次编辑于 2026/1/26
 
 ## 一、需求说明
 
@@ -15,7 +15,7 @@
      ```cmd
      wsl.exe --install Ubuntu-22.04
      ```
-   - 安装之后，还需要首次打开，完成用户名和密码的配置
+   - 安装之后，如果没有完成用户名和密码的配置。还需要进去执行一遍
      
        ```cmd
        wsl.exe -d Ubuntu-22.04
@@ -25,7 +25,7 @@
 
 3. **注意以上过程，wsl安装出错，可能是网络问题，可能是需要wsl注销重新安装**
 
-4. **WSL2 Ubuntu 下安装 git gitk git-gui**
+4. **WSL2 Ubuntu 下安装 git gitk git-gui**。避免每次git输入用户密码，可以使用：git config --global credential.helper store
 
    - 在 Ubuntu 终端中输入以下命令安装
 
@@ -35,12 +35,13 @@
      sudo apt install git gitk git-gui
      ```
 
-3. **克隆项目源码，选择稳定分支**
+5. **克隆项目源码，选择稳定分支**
 
    - 在 Ubuntu 终端中输入以下命令克隆，可以使用SSH，配置方法：[github配置SSH-Key保姆级教程 - 知乎](https://zhuanlan.zhihu.com/p/688103044)
 
      ```bash
-     git clone -b ArduPilot-4.6 https://github.com/ArduPilot/ardupilot.git
+     git clone https://github.com/ArduPilot/ardupilot.git
+     git checkout ArduPilot-4.6
      ```
 
 4. **配置工作环境，可选VSCode或者Trae。以下是VScode示例**
@@ -53,7 +54,7 @@
 
    - 打开终端 (`Ctrl + ~`)
 
-   -   输入以下命令安装依赖，最后再强制更新子模块，确保waf下载，建议逐行运行
+   -   输入以下命令安装依赖，最后再强制更新子模块，确保waf下载，建议逐行运行。
 
        ```bash
        sudo apt-get update
@@ -64,15 +65,27 @@
        . ~/.profile
        ```
 
-   -   耐心等待终端输出，需要挂梯子，但子模块更新的时候挂梯子会不成功
+   -   如何某个子模块使用update无法下载，可以进入module目录下，直接使用git clone。
 
-       ```bash
-       ---------- ./Tools/environment_install/install-prereqs-ubuntu.sh end ----------
-       ```
+       - 例如：~/ardupilot/modules$ git clone https://github.com/ArduPilot/ChibiOS.git
+       
+   - 耐心等待终端输出，需要挂梯子，但子模块更新的时候挂梯子会不成功
 
-       依赖安装成功
+     ```bash
+     ---------- ./Tools/environment_install/install-prereqs-ubuntu.sh end ----------
+     ```
+   
+     依赖安装成功
+   
+   - 强烈建议安装 `ARDUPILOT DEVENV` 扩展以检查依赖和工具是否齐全，如有缺失工具和依赖一定要补齐
 
-   -   强烈建议安装 `ARDUPILOT DEVENV` 扩展以检查依赖和工具是否齐全，如有缺失工具和依赖一定要补齐
+### (二)编译 Copter 固件
+​	在终端中输入以下命令，首先清理环境，如果是自定义固件需要配置并编译 Bootloader，最后编译 Copter 固件,构建系统将会自动将 Bootloader 打包进固件中。以微空科技的飞控板为例，直接编译即可。
+
+```bash
+	./waf distclean
+	./waf configure --board MicoAir743v2 && ./waf copter
+```
 
 
 
