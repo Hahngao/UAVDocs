@@ -30,9 +30,17 @@
    - 在 Ubuntu 终端中输入以下命令安装
 
      ```bash
-     sudo apt update
-     sudo apt upgrade
-     sudo apt install git gitk git-gui
+      # 更新可用软件包列表，从软件源获取最新的版本信息
+      sudo apt update
+      
+      # 升级所有已安装的软件包到最新版本
+      sudo apt upgrade
+      
+      # 安装Git版本控制系统及相关图形化工具：
+      # git - 核心版本控制工具
+      # gitk - Git仓库可视化浏览器（基于Tk）
+      # git-gui - Git图形化界面工具
+      sudo apt install git gitk git-gui
      ```
 
 5. **克隆项目源码，选择稳定分支**
@@ -41,7 +49,11 @@
 
      ```bash
      git clone https://github.com/ArduPilot/ardupilot.git
+<<<<<<< HEAD
      git checkout ArduPilot-4.6
+=======
+     # git clone git@github.com:ArduPilot/ardupilot.git
+>>>>>>> 3e359f85c648554b5be08e2230999f288d3fecc2
      ```
 
 4. **配置工作环境，可选VSCode或者Trae。以下是VScode示例**
