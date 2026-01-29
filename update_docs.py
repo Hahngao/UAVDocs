@@ -118,8 +118,8 @@ def main():
         
         # Scan children
         files = scan_folder(folder_path)
-        # Sort files by filename
-        files.sort(key=lambda x: x['filename'])
+        # Sort files by title
+        files.sort(key=lambda x: x['title'])
         
         folder_readme_content = [f"# {folder}\n"]
         
