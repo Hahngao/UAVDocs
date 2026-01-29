@@ -1,7 +1,19 @@
-# 应用开发教程 文档
+# 应用开发教程
 
-XDKJY UAV系列作为西安电子科技大学面向无人机系统集成爱好者的高性价比开发平台，支持PX4、APM、Dronecode、ROS、Nvidia和Ubuntu等高级软件社区。
-
-## 导航
-
-- [Airsim环境下的硬件在环仿真](应用开发教程/airsim_hilsim.md)
+- [Airsim环境下的硬件在环仿真](airsim_hilsim.md)
+- [相机吊舱操作](campod.md)
+- [Flight Data Analysis](flight_log.md)
+- [使用激光SLAM实现室内定位](laserslam.md)
+- [使用Nokov度量运动捕捉系统进行定位](motion_capture.md)
+- [Obstacle Avoidance in Outdoor Environment](obs_avoidance.md)
+- [Mavros在线控制 (C++)](offboard.md)
+- [Mavros在线控制 (Python)](offboard_python.md)
+- [室内光流定位](opticalflow_indoor.md)
+- [供电和编程界面](powerprog.md)
+- [Deep Learning in ROS](ros_deeplearning.md)
+- [虚拟仿真](simulation.md)
+- [DASA集群仿真工具箱](swarm_sim.md)
+- [使用UWB模块搭建室内定位系统](uwb_loco.md)
+- [基于立体视觉和GPU加速的视觉里程系统(VINS)](vins-fusion.md)
+- [基于跟踪相机的室内自主飞行实现](vision_indoor.md)
+- [实时视觉识别](visualrecog.md)

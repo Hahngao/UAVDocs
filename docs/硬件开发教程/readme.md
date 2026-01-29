@@ -1,7 +1,9 @@
-# 硬件开发教程 文档
+# 硬件开发教程
 
-XDKJY UAV系列作为西安电子科技大学面向无人机系统集成爱好者的高性价比开发平台，支持PX4、APM、Dronecode、ROS、Nvidia和Ubuntu等高级软件社区。
-
-## 导航
-
-- [APM固件烧录](硬件开发教程/APM/DIY_APM_Guide.md)
+- [AM32 CAN ESC自定义固件编译与烧录](AM32/DIY_AM32_ESC_Guide.md)
+- [APM 自定义固件编译与烧录](APM/DIY_APM_Guide.md)
+- [AP Peripheral自定义固件编译与烧录](AP_Peripheral/DIY_AP_Peripheral_Guide.md)
+- [ExpressLRS 接收机自定义固件编译与烧录](ExpressLRS/DIY_ELRS_RX_Guide.md)
+- [Jeston Orin Nano/NX 自定义底板对应设备树编写与系统编译烧录](Jetson_DTSI/DIY_Jetson_Board_Guide.md)
+- [DroneBridge 自定义固件烧录](DroneBridge/DroneBridge_Guide.md)
+- [TPS65987D + TUSB1146 自定义固件编译与烧录](Typec_PD_Control/Type_C_DP_Guide.md)

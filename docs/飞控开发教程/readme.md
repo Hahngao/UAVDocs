@@ -1,7 +1,5 @@
-# 飞控开发教程 文档
+# 飞控开发教程
 
-XDKJY UAV系列作为西安电子科技大学面向无人机系统集成爱好者的高性价比开发平台，支持PX4、APM、Dronecode、ROS、Nvidia和Ubuntu等高级软件社区。
-
-## 导航
-
-- [环境搭建及固件编译](飞控开发教程/环境搭建及固件编译/buildenv.md)
+- [ArduCopter 自定义飞行模式添加指南](环境搭建及固件编译/Custom_Flight_Mode_Guide.md)
+- [ArduPilot SITL 仿真教程](仿真相关/SITL仿真教程.md)
+- [APM、PX4环境搭建及固件编译](环境搭建及固件编译/buildenv.md)
