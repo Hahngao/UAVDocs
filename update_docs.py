@@ -127,7 +127,7 @@ def main():
             # Add to sidebar
             sidebar_lines.append(f"  - [{file_info['title']}]({file_info['path']})")
             # Add to folder readme
-            folder_readme_content.append(f"- [{file_info['title']}]({file_info['local_path']})")
+            folder_readme_content.append(f"- [{file_info['title']}]({file_info['path']})")
             
         # Update folder readme
         with open(readme_path, 'w', encoding='utf-8') as f:
