@@ -1,26 +1,11 @@
 import os
+import re
 
-ROOT_DIR = r"d:\CodeProject\UAVDocs\docs"
+BASE_DIR = os.path.dirname(os.path.abspath(__file__))
+ROOT_DIR = os.path.join(BASE_DIR, "docs")
+README_PATH = os.path.join(ROOT_DIR, "README.md")
 SIDEBAR_PATH = os.path.join(ROOT_DIR, "_sidebar.md")
 
-# Level 1 folders
-FOLDERS = [
-    "飞控开发教程",
-    "地面站开发教程",
-    "硬件开发教程",
-    "应用开发教程"
-]
-
-# Preferred order for root files
-ROOT_FILES_ORDER = [
-    "intro.md",
-    "systemoverview.md",
-    "hardware_options.md",
-    "quickstart.md",
-    "api.md"
-]
-
-# Files to ignore in sidebar scanning
 IGNORE_FILES = ["_sidebar.md", "_navbar.md", ".nojekyll", "README.md", "index.html"]
 
 def get_title(filepath):
@@ -37,6 +22,40 @@ def get_title(filepath):
     
     # Fallback to filename without extension
     return os.path.splitext(os.path.basename(filepath))[0]
+
+def get_root_folders():
+    try:
+        folders = [
+            name for name in os.listdir(ROOT_DIR)
+            if os.path.isdir(os.path.join(ROOT_DIR, name)) and not name.startswith('.')
+        ]
+    except FileNotFoundError:
+        print(f"Directory not found: {ROOT_DIR}")
+        return []
+    return sorted(folders)
+
+def get_root_files_order():
+    try:
+        with open(README_PATH, 'r', encoding='utf-8') as f:
+            content = f.read()
+    except FileNotFoundError:
+        print(f"README not found: {README_PATH}")
+        return []
+
+    order = []
+    for link in re.findall(r'\[[^\]]+\]\(([^)]+)\)', content):
+        normalized_link = link.strip().replace('\\', '/')
+        filename = os.path.basename(normalized_link)
+
+        if '/' in normalized_link or not filename.lower().endswith('.md'):
+            continue
+
+        if filename in IGNORE_FILES or filename in order:
+            continue
+
+        order.append(filename)
+
+    return order
 
 def scan_folder(folder_path):
     """Recursively scan for .md files, excluding readme.md."""
@@ -61,6 +80,8 @@ def scan_folder(folder_path):
 
 def main():
     sidebar_lines = []
+    root_folders = get_root_folders()
+    root_files_order = get_root_files_order()
     
     # 1. Process Root Files
     # Get all md files in root
@@ -77,23 +98,14 @@ def main():
     sorted_root_files = []
     remaining_files = root_files_all.copy()
     
-    for name in ROOT_FILES_ORDER:
+    for name in root_files_order:
         # Case insensitive check
         found = next((f for f in remaining_files if f.lower() == name.lower()), None)
         if found:
             sorted_root_files.append(found)
             remaining_files.remove(found)
     
-    # Append any other root files (excluding progress.md which we handle last)
-    others = []
-    progress_file = None
-    for f in remaining_files:
-        if f.lower() == "progress.md":
-            progress_file = f
-        else:
-            others.append(f)
-            
-    sorted_root_files.extend(sorted(others))
+    sorted_root_files.extend(sorted(remaining_files))
     
     # Add root files to sidebar
     for filename in sorted_root_files:
@@ -103,7 +115,7 @@ def main():
         sidebar_lines.append(f"- [**{title}**]({filename})")
 
     # 2. Process Special Folders
-    for folder in FOLDERS:
+    for folder in root_folders:
         folder_path = os.path.join(ROOT_DIR, folder)
         if not os.path.exists(folder_path):
             print(f"Folder not found, skipping: {folder}")
@@ -134,12 +146,6 @@ def main():
             f.write('\n'.join(folder_readme_content))
             print(f"Updated {readme_path}")
             
-    # 3. Handle progress.md
-    if progress_file:
-        filepath = os.path.join(ROOT_DIR, progress_file)
-        title = get_title(filepath)
-        sidebar_lines.append(f"- [**{title}**]({progress_file})")
-
     # Write Sidebar
     with open(SIDEBAR_PATH, 'w', encoding='utf-8') as f:
         f.write('\n'.join(sidebar_lines))
