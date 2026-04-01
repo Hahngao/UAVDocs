@@ -1,58 +1,66 @@
 # ArduCopter 自定义飞行模式添加指南
 
-本指南基于 `newcode` 目录下的修改，详细说明如何在 ArduCopter 中添加一个自定义飞行模式（以 `AUTO_DRAW` 星形绘制模式为例）。
+本文目标是给出一份**可对照官方源码直接落地**的步骤说明。
 
-## 涉及文件
+## 当前实现涉及文件
 
-1.  `ArduCopter/mode.h`: 定义飞行模式枚举和类。
-2.  `ArduCopter/Copter.h`: 在 Copter 主类中声明飞行模式对象。
-3.  `ArduCopter/mode.cpp`: 注册飞行模式，使其可通过 MAVLink 或其他方式调用。
-4.  `ArduCopter/mode_AutoDraw.cpp`: (新建) 实现自定义飞行模式的具体逻辑。
+1. `ArduCopter/config.h`：开关宏 `MODE_AUTO_DRAW_ENABLED`
+2. `ArduCopter/mode.h`：`Mode::Number::AUTO_DRAW` + `ModeAutoDraw` 类声明
+3. `ArduCopter/Copter.h`：`Copter` 类成员 `mode_autodraw`
+4. `ArduCopter/mode.cpp`：`mode_from_mode_num()` 中注册 `AUTO_DRAW`
+5. `ArduCopter/mode_autodraw.cpp`：飞行模式逻辑实现
+6. `ArduCopter/Parameters.h`：`ParametersG2::star_radius_cm` 字段声明
 
 ---
 
-## 步骤 1: 定义飞行模式类 (`mode.h`)
+## 步骤 1：打开模式开关（`config.h`）
 
-在 `ArduCopter/mode.h` 文件中，需要完成两件事：添加模式枚举值和定义模式类。
-
-### 1.1 添加枚举值
-
-在 `Mode::Number` 枚举类中添加新的模式编号：
 
 ```cpp
-// ArduCopter/mode.h
+#ifndef MODE_AUTO_DRAW_ENABLED
+# define MODE_AUTO_DRAW_ENABLED 1
+#endif
+```
 
+如果移植到其他分支，先确认该宏存在并生效。
+
+---
+
+## 步骤 2：在 `mode.h` 增加模式编号与类声明
+
+### 2.1 枚举编号
+
+```cpp
 enum class Number : uint8_t {
-    // ... 现有模式 ...
+    // ...
     TURTLE =       28,
-    AUTO_DRAW =    29,  // 新增：Auto Draw mode
+    AUTO_DRAW=     29,
 };
 ```
 
-### 1.2 定义模式类
+### 2.2 模式类声明
 
-在文件末尾（或其他合适位置）定义继承自 `Mode` 的新类 `ModeAutoDraw`：
+关键点：
+
+- 基类构造继承写法是 `using Mode::Mode;`
+- 使用 `requires_position()`（不是 `requires_GPS()`）
+- `allows_arming` 签名是 `allows_arming(AP_Arming::Method method)`
+- 当前实现里 `requires_position()` 返回 `false`
 
 ```cpp
-// ArduCopter/mode.h
-
-// 新增代码：自定义飞行模式类 ModeAutoDraw，继承自 Mode
 class ModeAutoDraw : public Mode {
-
 public:
-    // 继承构造函数
-    using Copter::Mode::Mode;
+    using Mode::Mode;
+    Number mode_number() const override { return Number::AUTO_DRAW; }
 
-    // 初始化和主运行函数
     bool init(bool ignore_checks) override;
     void run() override;
 
-    // 模式属性设置
-    bool requires_GPS() const override { return true; }         // 需要 GPS
-    bool has_manual_throttle() const override { return false; } // 自动油门
-    bool allows_arming(bool from_gcs) const override { return false; } // 不允许在模式下解锁
-    bool is_autopilot() const override { return true; }         // 属于自动模式
-    bool in_guided_mode() const { return true; }
+    bool requires_position() const override { return false; }
+    bool has_manual_throttle() const override { return false; }
+    bool allows_arming(AP_Arming::Method method) const override { return false; }
+    bool is_autopilot() const override { return true; }
+    bool in_guided_mode() const override { return true; }
     bool has_user_takeoff(bool must_navigate) const override { return false; }
 
 protected:
@@ -60,165 +68,204 @@ protected:
     const char *name4() const override { return "DRAWSTAR"; }
 
 private:
-    Vector3f path[10];      // 存储星形路线的航点
-    int path_num;           // 当前航点索引
+    char _aircraft_name[32] = {0};
+    Vector3f path[10];
+    int path_num = 0;
 
-    void generate_path();   // 生成星形路径
-    void pos_control_start(); // 启动位置控制
-    void pos_control_run();   // 执行位置控制
+    void generate_path();
+    void pos_control_start();
+    void pos_control_run();
 };
 ```
 
 ---
 
-## 步骤 2: 在 Copter 类中声明实例 (`Copter.h`)
-
-在 `ArduCopter/Copter.h` 的 `Copter` 类定义中，添加新模式的实例对象。建议使用宏控制。
+## 步骤 3：在 `Copter.h` 声明模式对象
 
 ```cpp
-// ArduCopter/Copter.h
-
-class Copter {
-    // ... 现有代码 ...
-
-#if MODE_ACRO_ENABLED
-    ModeAcro mode_acro;
-#endif
-
-    // ... 其他模式 ...
-
 #if MODE_AUTO_DRAW_ENABLED
-    ModeAutoDraw mode_autodraw;    // 新增：创建自动 draw 飞行模式对象
+    ModeAutoDraw mode_autodraw;
 #endif
-
-    // ... 现有代码 ...
-};
 ```
 
-> **注意**: `MODE_AUTO_DRAW_ENABLED` 宏需要在项目的配置头文件（如 `AP_Config.h`）中定义，或者直接在相关文件中定义。
+放在其他 `Mode*` 成员附近，保持现有文件结构。
 
 ---
 
-## 步骤 3: 注册飞行模式 (`mode.cpp`)
+## 步骤 4：在 `mode.cpp` 注册模式映射
 
-在 `ArduCopter/mode.cpp` 中，修改 `mode_from_mode_num` 函数，将枚举值映射到对应的模式对象。
+在 `Copter::mode_from_mode_num()` 的 `switch` 中加入：
 
 ```cpp
-// ArduCopter/mode.cpp
+#if MODE_AUTO_DRAW_ENABLED
+    case Mode::Number::AUTO_DRAW:
+        return &mode_autodraw;
+#endif
+```
 
-Mode *Copter::mode_from_mode_num(const Mode::Number mode)
+当前实现直接 `return`，不使用中间 `ret` 变量。
+
+---
+
+## 步骤 5：实现模式逻辑（`mode_autodraw.cpp`）
+
+### 5.1 `init()`
+
+```cpp
+bool ModeAutoDraw::init(bool ignore_checks)
 {
-    Mode *ret = nullptr;
+    _aircraft_name[0] = '\0';
+    path_num = 0;
 
-    switch (mode) {
-        // ... 现有 case ...
-
-#if MODE_AUTO_DRAW_ENABLED
-        case Mode::Number::AUTO_DRAW:   // 新增：映射 AUTO_DRAW 到 mode_autodraw 对象
-            ret = &mode_autodraw;
-            break;
-#endif
-
-        default:
-            break;
+    if (!ignore_checks && !copter.position_ok()) {
+        gcs().send_text(MAV_SEVERITY_WARNING, "ModeAutoDraw: GPS not ready, ignoring checks");
     }
 
-    return ret;
+    auto_yaw.set_mode_to_default(false);
+    generate_path();
+
+    const int name_fd = AP::FS().open("autodraw_name.txt", O_RDONLY, true);
+    if (name_fd != -1) {
+        char line[sizeof(_aircraft_name)];
+        if (AP::FS().fgets(line, sizeof(line) - 1, name_fd)) {
+            line[sizeof(line) - 1] = '\0';
+            const size_t len = strcspn(line, "\r\n");
+            line[len] = '\0';
+            strncpy(_aircraft_name, line, sizeof(_aircraft_name) - 1);
+            _aircraft_name[sizeof(_aircraft_name) - 1] = '\0';
+        }
+        AP::FS().close(name_fd);
+    }
+
+    pos_control_start();
+    return true;
 }
 ```
 
----
-
-## 步骤 4: 实现飞行模式逻辑 (`mode_AutoDraw.cpp`)
-
-创建一个新文件 `ArduCopter/mode_AutoDraw.cpp`，实现模式的初始化、路径生成和控制逻辑。
-
-### 4.1 包含头文件
+### 5.2 `generate_path()`
 
 ```cpp
-#include "Copter.h"
-```
-
-### 4.2 初始化 (`init`)
-
-初始化时检查位置状态，生成路径，并切换到位置控制。
-
-```cpp
-bool Copter::ModeAutoDraw::init(bool ignore_checks)
+void ModeAutoDraw::generate_path()
 {
-    if (copter.position_ok() || ignore_checks) {
-        auto_yaw.set_mode_to_default(false);
-        path_num = 0;
-        generate_path();      // 生成路径
-        pos_control_start();  // 启动控制
-        return true;
+    float radius_cm = g2.star_radius_cm;  // 此处star_radius_cm变量需要在Parameters.h中声明
+    if (radius_cm <= 0.0f) {
+        radius_cm = 1000.0f;
+    }
+
+    Vector3f stopping_point_neu_cm;
+    if (wp_nav) {
+        wp_nav->get_wp_stopping_point_NEU_cm(stopping_point_neu_cm);
     } else {
-        return false;
+        stopping_point_neu_cm.zero();
     }
-}
-```
+    path[0] = stopping_point_neu_cm;
 
-### 4.3 路径生成 (`generate_path`)
-
-示例代码生成了一个星形路径。
-
-```cpp
-void Copter::ModeAutoDraw::generate_path()
-{
-    float radius_cm = g2.star_radius_cm; // 假设有一个参数控制半径
-    wp_nav->get_wp_stopping_point(path[0]); // 以当前停止点为起点
-
-    // 计算星形顶点 (示例逻辑)
     path[1] = path[0] + Vector3f(1.0f, 0, 0) * radius_cm;
     path[2] = path[0] + Vector3f(-cosf(radians(36.0f)), -sinf(radians(36.0f)), 0) * radius_cm;
-    // ... 计算其他点 ...
-    path[6] = path[1]; // 闭合路径
+    path[3] = path[0] + Vector3f(sinf(radians(18.0f)), cosf(radians(18.0f)), 0) * radius_cm;
+    path[4] = path[0] + Vector3f(sinf(radians(18.0f)), -cosf(radians(18.0f)), 0) * radius_cm;
+    path[5] = path[0] + Vector3f(-cosf(radians(36.0f)), sinf(radians(36.0f)), 0) * radius_cm;
+    path[6] = path[1];
 }
 ```
 
-### 4.4 控制循环 (`run` 和 `pos_control_run`)
-
-`run()` 函数由主循环以 100Hz 调用。
+### 5.3 `pos_control_start()`
 
 ```cpp
-void Copter::ModeAutoDraw::run()
+void ModeAutoDraw::pos_control_start()
 {
-    // 检查航点到达情况并切换下一个航点
-    if(path_num < 6){
-        if(wp_nav->reached_wp_destination()){
-            path_num ++;
-            wp_nav->set_wp_destination(path[path_num], false);
+    if (wp_nav) {
+        wp_nav->wp_and_spline_init_m();
+        wp_nav->set_wp_destination_NEU_cm(path[0], false);
+    }
+    auto_yaw.set_mode_to_default(false);
+}
+```
+
+### 5.4 `run()`
+
+```cpp
+void ModeAutoDraw::run()
+{
+    static uint32_t last_gps_time_print_ms;
+    const uint32_t now_ms = AP_HAL::millis();
+    if (now_ms - last_gps_time_print_ms >= 1000) {
+        last_gps_time_print_ms = now_ms;
+        gcs().send_text(MAV_SEVERITY_INFO,
+                        "ID: %s, GPS time: week %u ms %lu",
+                        _aircraft_name,
+                        copter.gps.time_week(),
+                        (unsigned long)copter.gps.time_week_ms());
+    }
+
+    if (wp_nav && path_num < 6) {
+        if (wp_nav->reached_wp_destination()) {
+            path_num++;
+            if (path_num <= 6) {
+                wp_nav->set_wp_destination_NEU_cm(path[path_num], false);
+            }
         }
     }
 
-    pos_control_run(); // 执行位置控制
+    pos_control_run();
 }
+```
 
-void Copter::ModeAutoDraw::pos_control_run()    
+### 5.5 `pos_control_run()`
+
+```cpp
+void ModeAutoDraw::pos_control_run()
 {
-    // 安全检查
-    if (!motors->armed() || !ap.auto_armed || !motors->get_interlock() || ap.land_complete) {
+    if (!motors || !motors->armed() || !copter.ap.auto_armed || !motors->get_interlock() || copter.ap.land_complete) {
         zero_throttle_and_relax_ac();
         return;
     }
 
-    // 允许飞行员控制偏航
-    // ... (处理偏航输入逻辑)
+    float target_yaw_rate_rads = 0.0f;
+    if (!copter.failsafe.radio) {
+        target_yaw_rate_rads = get_pilot_desired_yaw_rate_rads();
+        if (!is_zero(target_yaw_rate_rads)) {
+            auto_yaw.set_mode(AutoYaw::Mode::PILOT_RATE);
+        }
+    }
 
-    // 设置电机输出
-    motors->set_desired_spool_state(AP_Motors::DESIRED_THROTTLE_UNLIMITED);
+    motors->set_desired_spool_state(AP_Motors::DesiredSpoolState::THROTTLE_UNLIMITED);
+    if (wp_nav) {
+        copter.failsafe_terrain_set_status(wp_nav->update_wpnav());
+    }
+    if (pos_control) {
+        pos_control->D_update_controller();
+    }
 
-    // 更新导航控制器
-    copter.failsafe_terrain_set_status(wp_nav->update_wpnav());
-
-    // 更新高度控制器
-    pos_control->update_z_controller();
-
-    // 发送姿态控制指令
-    attitude_control->input_euler_angle_roll_pitch_yaw(wp_nav->get_roll(), wp_nav->get_pitch(), auto_yaw.yaw(), true);
+    if (attitude_control && wp_nav) {
+        attitude_control->input_euler_angle_roll_pitch_euler_rate_yaw_rad(
+            wp_nav->get_roll_rad(),
+            wp_nav->get_pitch_rad(),
+            target_yaw_rate_rads);
+    }
 }
 ```
 
+
 ---
 
-完成以上步骤后，重新编译 ArduCopter 固件即可使用新的 `AUTO_DRAW` 飞行模式。
+## 编译验证
+
+
+在仓库根目录执行：
+
+```sh
+./waf configure --board sitl
+./waf copter -j4
+```
+
+先编译 SITL 的目的：快速确认飞行模式的代码接线（模式枚举、对象声明、模式注册与实现文件）是否正确，并在不依赖具体硬件外设与板级配置的前提下尽早发现编译错误，缩短调试迭代周期。
+
+如果需要验证 `MicoAir743v2` 硬件目标(示例)，可执行：
+
+```sh
+./waf configure --board MicoAir743v2
+./waf copter -j4
+```
+
+如果编译通过，说明代码层面的集成没有问题。后续可以在 SITL仿真中测试飞行模式逻辑。

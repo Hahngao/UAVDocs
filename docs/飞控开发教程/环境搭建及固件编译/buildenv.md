@@ -1,102 +1,110 @@
-# 0.APM环境搭建及固件编译
+# APM 环境搭建及固件编译
 
-> *Hahngao 首次编辑于 2026/1/26
+> Hahngao 首次编辑于 2026/1/26
 
+## 一、环境准备
 
+### 1）安装 WSL2 + Ubuntu 24.04
 
-## 一、AMP环境搭建及固件编译步骤
-### (一)环境准备
+- 在 Windows 11 终端执行（若重装可先注销旧发行版）：
 
-1. **安装WSL2 Ubuntu24.04**
+```cmd
+# 可选：仅在需要重装时执行
+wsl --unregister Ubuntu-24.04
 
-   - 在 Windows 11 终端中输入以下命令安装
+# 安装 Ubuntu 24.04
+wsl.exe --install Ubuntu-24.04
+```
 
-     ```cmd
-     # 如果重装，需要先注销已安装的WSL2发行版 wsl --unregister Ubuntu-24.04 
-     wsl.exe --install Ubuntu-24.04
-     ```
-     
-   - 安装之后，如果没有完成用户名和密码的配置。还需要进去执行一遍
-     
-       ```cmd
-       wsl.exe -d Ubuntu-24.04
-       ```
+- 安装后若未完成用户名/密码初始化，可手动进入一次：
 
-   ![image-20260129171744128](image-20260129171744128.png)
+```cmd
+wsl.exe -d Ubuntu-24.04
+```
 
-   - *注意以上过程，wsl安装出错，可能是网络问题，挂TZ容易中断，也可能是需要wsl注销重新安装*
+![image-20260129171744128](image-20260129171744128.png)
 
+> 说明：WSL 安装失败通常与网络或发行版状态有关。若反复失败，可先 `wsl --unregister` 后重装。
 
-3. **WSL2 Ubuntu 下安装 git gitk git-gui**。以后为了避免每次git输入用户密码，可以使用：git config --global credential.helper store
+### 2）在 Ubuntu 中安装 Git 工具
 
-   - 在 Ubuntu 终端中输入以下命令安装
-
-     ```bash
-      # 更新可用软件包列表，从软件源获取最新的版本信息
-      sudo apt update
-      
-      # 升级所有已安装的软件包到最新版本
-      sudo apt upgrade
-      
-      # 安装Git版本控制系统及相关图形化工具：
-      # git - 核心版本控制工具
-      # gitk - Git仓库可视化浏览器（基于Tk）
-      # git-gui - Git图形化界面工具
-      sudo apt install git gitk git-gui
-     ```
-
-4. **克隆项目源码，选择稳定分支**
-
-   - 在 Ubuntu 终端中输入以下命令克隆，挂TZ容易中断，可以尝试SSH。配置方法：[github配置SSH-Key保姆级教程 - 知乎](https://zhuanlan.zhihu.com/p/688103044)
-
-     ```bash
-     git clone https://github.com/ArduPilot/ardupilot.git
-     =======
-     # git clone git@github.com:ArduPilot/ardupilot.git    
-     ```
-
-4. **配置工作环境，可选VSCode或者Trae。以下是VScode示例**
-   
-   - 在 VS Code 中点击`远程`按键，选择`WSL`，选择安装的 Ubuntu-22.04，等待目录切换完成
-   - 在 VS Code 中 `File -> Open Folder` 打开 `ardupilot` 文件夹
-   - 切换到 master 分支，只有master才可以使用siti仿真
-   - *部分操作在 Ubuntu 终端是可以，但方便后续AI代码开发，才选择在IDE（VSCode）上*
-   
-5. **安装必要依赖**
-
-   - 打开VScode的终端 (`Ctrl + ~`)
-
-   - 输入以下命令安装依赖，先强制更新子模块，确保waf下载，建议逐行运行。
-
-     ```bash
-     sudo apt-get update
-     sudo apt-get install -y binutils-arm-none-eabi gcc-arm-none-eabi
-     git submodule update --init --recursive --force
-     chmod 777 ./Tools/environment_install/install-prereqs-ubuntu.sh
-     ./Tools/environment_install/install-prereqs-ubuntu.sh -y
-     . ~/.profile
-     ```
-
-   -   如何某个子模块使用update无法下载，可以进入module目录下，直接使用git clone。
-
-       - 例如：~/ardupilot/modules$ git clone https://github.com/ArduPilot/ChibiOS.git
-       
-   - 耐心等待终端输出，需要TZ，但某些子模块更新的时候挂TZ会不成功
-
-   ![image-20260129175920705](image-20260129175920705.png)
-
-   
-     依赖安装成功
-
-   - 强烈建议安装 `ARDUPILOT DEVENV` 扩展以检查依赖和工具是否齐全，如有缺失工具和依赖一定要补齐
-
-### (二)编译 Copter 固件（以MicoAir743v2为例）
-​	在终端中输入以下命令，首先清理环境，如果是自定义固件需要配置并编译 Bootloader，最后编译 Copter 固件,构建系统将会自动将 Bootloader 打包进固件中。以微空科技的飞控板为例，直接编译即可。
+在 Ubuntu 终端执行：
 
 ```bash
-	./waf distclean
-	./waf configure --board MicoAir743v2 && ./waf copter
+# 更新软件包索引
+sudo apt update
+
+# 升级已安装软件包
+sudo apt upgrade -y
+
+# 安装 Git 与图形化工具
+sudo apt install -y git gitk git-gui
 ```
+
+可选：缓存 Git 凭据（减少重复输入用户名密码）
+
+```bash
+git config --global credential.helper store
+```
+
+### 3）克隆 ArduPilot 源码
+
+```bash
+git clone https://github.com/ArduPilot/ardupilot.git
+# 或 SSH(需要提前配置好密钥和公钥)：
+git clone git@github.com:ArduPilot/ardupilot.git
+
+cd ardupilot
+```
+
+> 使用https克隆代码仓库时，若因网络不稳定而无法克隆时建议使用 SSH 或重试多次。
+
+### 4）使用 VS Code 连接 WSL 工作区（示例）
+
+- VS Code 中使用 Remote - WSL 连接 `Ubuntu-24.04`
+- 打开 `ardupilot` 目录（`File -> Open Folder`）
+- ！本教程使用 `master` 分支进行 SITL 仿真相关开发
+
+```bash
+git checkout master
+git pull
+```
+
+### 5）安装编译依赖
+
+在 `ardupilot` 根目录执行，建议逐行运行：
+
+```bash
+sudo apt-get update
+sudo apt-get install -y binutils-arm-none-eabi gcc-arm-none-eabi
+git submodule update --init --recursive --force
+chmod +x ./Tools/environment_install/install-prereqs-ubuntu.sh
+./Tools/environment_install/install-prereqs-ubuntu.sh -y
+. ~/.profile
+```
+
+如果某个子模块更新失败，可进入 `modules` 目录手动克隆，例如：
+
+```bash
+cd ~/ardupilot/modules
+git clone https://github.com/ArduPilot/ChibiOS.git
+```
+
+![image-20260129175920705](image-20260129175920705.png)
+
+- 推荐安装 `ARDUPILOT DEVENV` 扩展检查依赖是否完整。
+
+## 二、编译 Copter 固件（以 MicoAir743v2 为例）
+
+在 `ardupilot` 根目录执行。通常先清理，再配置目标板并编译：
+
+```bash
+./waf distclean
+./waf configure --board MicoAir743v2
+./waf copter -j4
+```
+
+> 对于需要自定义 Bootloader 的板卡，请先按板级文档完成 Bootloader 编译与烧录流程。
 
 ![image-20260129180352716](image-20260129180352716.png)
 
