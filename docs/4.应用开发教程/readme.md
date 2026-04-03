@@ -1,6 +1,6 @@
 # 4.应用开发教程
 
-- [ARIS部署文档](4.应用开发教程/AIRS部署/AIRS部署/ARIS部署文档.md)
+- [ARIS部署文档](4.应用开发教程/AIRS部署/ARIS部署文档.md)
 - [Airsim环境下的硬件在环仿真](4.应用开发教程/airsim_hilsim.md)
 - [Blender 表演无人机灯光秀制作（WSL + Skybrush Studio for Blender）](4.应用开发教程/blender_shows.md)
 - [DASA集群仿真工具箱](4.应用开发教程/swarm_sim.md)
