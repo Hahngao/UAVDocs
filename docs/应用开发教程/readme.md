@@ -1,6 +1,8 @@
 # 应用开发教程
 
+- [ARIS部署文档](应用开发教程/ARIS部署文档.md)
 - [Airsim环境下的硬件在环仿真](应用开发教程/airsim_hilsim.md)
+- [Blender 表演无人机灯光秀制作（WSL + Skybrush Studio for Blender）](应用开发教程/blender_shows.md)
 - [DASA集群仿真工具箱](应用开发教程/swarm_sim.md)
 - [Deep Learning in ROS](应用开发教程/ros_deeplearning.md)
 - [Flight Data Analysis](应用开发教程/flight_log.md)

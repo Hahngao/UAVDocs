@@ -21,6 +21,7 @@
 #   - 脚本需与 docs/ 目录处于同一父目录下
 # =============================================================================
 
+import html
 import os
 import re
 
@@ -31,20 +32,66 @@ SIDEBAR_PATH = os.path.join(ROOT_DIR, "_sidebar.md")
 
 IGNORE_FILES = ["_sidebar.md", "_navbar.md", ".nojekyll", "README.md", "index.html"]
 
+HTML_TAG_RE = re.compile(r"<[^>]+>")
+HEADER_RE = re.compile(r"^(#+)\s*(.*?)\s*$")
+
+def normalize_title(title):
+    title = html.unescape(title)
+    title = HTML_TAG_RE.sub("", title)
+    title = re.sub(r"\s+", " ", title)
+    return title.strip()
+
 def get_title(filepath):
-    """Extract title from the first header in the file."""
+    """Extract title from the first meaningful header in the file."""
+    fallback_title = os.path.splitext(os.path.basename(filepath))[0]
     try:
+        first_header_title = None
+        leading_h1_titles = []
+
         with open(filepath, 'r', encoding='utf-8') as f:
             for line in f:
-                line = line.strip()
-                if line.startswith('#'):
-                    # Remove # and whitespace
-                    return line.lstrip('#').strip()
+                stripped_line = line.strip()
+                if not stripped_line:
+                    continue
+
+                header_match = HEADER_RE.match(stripped_line)
+                if header_match:
+                    header_level = len(header_match.group(1))
+                    title = normalize_title(header_match.group(2))
+                    if not title:
+                        continue
+
+                    if first_header_title is None:
+                        first_header_title = title
+
+                    if header_level == 1:
+                        if first_header_title == title and not leading_h1_titles:
+                            leading_h1_titles.append(title)
+                            continue
+
+                        if leading_h1_titles:
+                            leading_h1_titles.append(title)
+                            continue
+
+                    if leading_h1_titles:
+                        break
+                    continue
+
+                if leading_h1_titles:
+                    break
     except Exception as e:
         print(f"Error reading {filepath}: {e}")
-    
-    # Fallback to filename without extension
-    return os.path.splitext(os.path.basename(filepath))[0]
+
+    if len(leading_h1_titles) == 1:
+        return leading_h1_titles[0]
+
+    if len(leading_h1_titles) > 1:
+        return fallback_title
+
+    if first_header_title:
+        return first_header_title
+
+    return fallback_title
 
 def get_root_folders():
     try:
